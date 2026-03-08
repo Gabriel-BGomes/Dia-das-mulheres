@@ -1,0 +1,1701 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Para Clarissa 💚</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --green: #1DB954;
+    --green-light: #1ed760;
+    --black: #121212;
+    --dark: #181818;
+    --card: #282828;
+    --text: #FFFFFF;
+    --muted: #B3B3B3;
+    --sidebar: #000000;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--black);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    overflow-x: hidden;
+    min-height: 100vh;
+  }
+
+  /* LAYOUT */
+  .app {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    grid-template-rows: 1fr 90px;
+    height: 100vh;
+    gap: 8px;
+    padding: 8px;
+  }
+
+  /* SIDEBAR */
+  .sidebar {
+    background: var(--sidebar);
+    border-radius: 12px;
+    padding: 24px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    grid-row: 1;
+    overflow-y: auto;
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 0 8px;
+  }
+
+  .logo svg { width: 32px; height: 32px; fill: var(--text); }
+  .logo span { font-size: 20px; font-weight: 700; letter-spacing: -0.5px; }
+
+  .nav { display: flex; flex-direction: column; gap: 4px; }
+
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 10px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    color: var(--muted);
+    font-weight: 500;
+    font-size: 14px;
+    transition: color 0.2s, background 0.2s;
+    text-decoration: none;
+  }
+
+  .nav-item:hover, .nav-item.active { color: var(--text); }
+  .nav-item.active { background: #282828; }
+  .nav-item svg { width: 24px; height: 24px; flex-shrink: 0; }
+
+  .library-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 12px;
+  }
+
+  .library-header span { color: var(--muted); font-weight: 700; font-size: 13px; text-transform: uppercase; letter-spacing: 1px; }
+
+  .playlist-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+
+  .playlist-item:hover { background: var(--card); }
+
+  .playlist-thumb {
+    width: 48px;
+    height: 48px;
+    border-radius: 4px;
+    flex-shrink: 0;
+    overflow: hidden;
+  }
+
+  .playlist-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .playlist-info { overflow: hidden; }
+  .playlist-name { font-size: 14px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .playlist-sub { font-size: 12px; color: var(--muted); }
+
+  /* MAIN */
+  .main {
+    background: var(--dark);
+    border-radius: 12px;
+    overflow-y: auto;
+    position: relative;
+  }
+
+  .main-header {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    padding: 16px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: rgba(24,24,24,0.9);
+    backdrop-filter: blur(10px);
+  }
+
+  .nav-arrows { display: flex; gap: 8px; }
+
+  .nav-btn {
+    width: 32px; height: 32px;
+    background: rgba(0,0,0,0.7);
+    border: none;
+    border-radius: 50%;
+    color: white;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: transform 0.1s;
+  }
+  .nav-btn svg { width: 16px; height: 16px; fill: currentColor; }
+  .nav-btn:hover { transform: scale(1.05); }
+
+  .mobile-menu-btn {
+    display: none;
+    width: 36px;
+    height: 36px;
+    background: rgba(0,0,0,0.7);
+    border: none;
+    border-radius: 50%;
+    color: white;
+    cursor: pointer;
+    align-items: center;
+    justify-content: center;
+  }
+  .mobile-menu-btn svg { width: 18px; height: 18px; fill: currentColor; }
+
+  .user-btn {
+    background: var(--card);
+    border: none;
+    border-radius: 20px;
+    color: white;
+    padding: 4px 8px 4px 4px;
+    display: flex; align-items: center; gap: 8px;
+    cursor: pointer;
+    font-size: 14px; font-weight: 700;
+    font-family: inherit;
+  }
+
+  .user-avatar {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    overflow: hidden;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px; font-weight: 700;
+    background: var(--green);
+  }
+  .user-avatar img { width: 100%; height: 100%; object-fit: cover; }
+
+  /* HERO */
+  .hero {
+    background: linear-gradient(180deg, #1a5c2e 0%, var(--dark) 100%);
+    padding: 40px 32px 32px;
+    display: flex;
+    align-items: flex-end;
+    gap: 24px;
+    min-height: 300px;
+  }
+
+  .hero-cover {
+    width: 232px; height: 232px;
+    border-radius: 4px;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.5);
+    flex-shrink: 0;
+    overflow: hidden;
+    animation: float 4s ease-in-out infinite;
+  }
+
+  .hero-cover img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+  }
+
+  .hero-info { display: flex; flex-direction: column; gap: 8px; }
+  .hero-type { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
+  .hero-title { font-size: clamp(32px, 5vw, 64px); font-weight: 900; line-height: 1; letter-spacing: -2px; }
+  .hero-desc { color: var(--muted); font-size: 14px; max-width: 500px; line-height: 1.6; }
+  .hero-meta { font-size: 13px; color: var(--muted); }
+  .hero-meta span { color: var(--text); font-weight: 700; }
+
+  /* ACTIONS */
+  .actions {
+    padding: 24px 32px;
+    display: flex;
+    align-items: center;
+    gap: 24px;
+  }
+
+  .play-btn {
+    width: 56px; height: 56px;
+    background: var(--green);
+    border: none;
+    border-radius: 50%;
+    color: black;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: transform 0.1s, background 0.2s;
+    box-shadow: 0 8px 20px rgba(29,185,84,0.4);
+  }
+  .play-btn svg { width: 24px; height: 24px; fill: black; }
+  .play-btn:hover { transform: scale(1.06); background: var(--green-light); }
+
+  .heart-btn {
+    background: none;
+    border: none;
+    color: var(--muted);
+    cursor: pointer;
+    transition: color 0.2s, transform 0.2s;
+    display: flex; align-items: center;
+  }
+  .heart-btn svg { width: 32px; height: 32px; }
+  .heart-btn:hover { color: white; transform: scale(1.1); }
+  .heart-btn.liked svg { fill: var(--green); color: var(--green); }
+
+  /* SECTIONS */
+  .section { padding: 0 32px 32px; }
+  .section-title { font-size: 22px; font-weight: 700; margin-bottom: 20px; }
+
+  /* SONGS */
+  .songs-header {
+    display: grid;
+    grid-template-columns: 40px 1fr 1fr auto;
+    padding: 0 16px 8px;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    color: var(--muted);
+    font-size: 12px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  .song-row {
+    display: grid;
+    grid-template-columns: 40px 1fr 1fr auto;
+    padding: 8px 16px;
+    border-radius: 6px;
+    align-items: center;
+    cursor: pointer;
+    transition: background 0.15s;
+    gap: 16px;
+  }
+  .song-row:hover { background: rgba(255,255,255,0.07); }
+  .song-row:hover .song-num-text { display: none; }
+  .song-row:hover .song-play-icon { display: flex !important; }
+  .song-row.active-song .song-name { color: var(--green); }
+  .song-row.active-song .song-num-text { color: var(--green); }
+
+  .song-num { color: var(--muted); font-size: 15px; text-align: center; position: relative; }
+  .song-num-text { display: block; }
+  .song-info { display: flex; align-items: center; gap: 12px; overflow: hidden; }
+  .song-thumb {
+    width: 40px; height: 40px;
+    border-radius: 4px;
+    background: var(--card);
+    flex-shrink: 0;
+    overflow: hidden;
+  }
+  .song-thumb img { width: 100%; height: 100%; object-fit: cover; }
+  .song-name { font-size: 15px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; transition: color 0.2s; }
+  .song-artist { font-size: 13px; color: var(--muted); }
+  .song-album { font-size: 14px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .song-duration { font-size: 14px; color: var(--muted); text-align: right; }
+  .song-play-icon { display: none !important; color: white; font-size: 16px; justify-content: center; }
+
+  /* CARDS */
+  .cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 24px;
+  }
+
+  .card {
+    background: var(--card);
+    padding: 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.3s;
+  }
+  .card:hover { background: #333; }
+
+  .card-cover {
+    width: 100%;
+    aspect-ratio: 1;
+    border-radius: 8px;
+    margin-bottom: 16px;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .card-cover img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s;
+  }
+  .card:hover .card-cover img { transform: scale(1.05); }
+
+  .card-play {
+    position: absolute;
+    bottom: 8px; right: 8px;
+    width: 48px; height: 48px;
+    background: var(--green);
+    border: none;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    color: black;
+    opacity: 0;
+    transform: translateY(8px);
+    transition: opacity 0.3s, transform 0.3s;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.4);
+    cursor: pointer;
+  }
+  .card-play svg { width: 20px; height: 20px; fill: black; }
+  .card:hover .card-play { opacity: 1; transform: translateY(0); }
+
+  .card-name { font-size: 15px; font-weight: 700; margin-bottom: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .card-desc { font-size: 13px; color: var(--muted); }
+
+  /* PLAYER */
+  .player {
+    background: #181818;
+    border-top: 1px solid #282828;
+    padding: 0 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    grid-column: 1 / -1;
+    border-radius: 12px;
+  }
+
+  .now-playing { display: flex; align-items: center; gap: 14px; flex: 1; min-width: 0; }
+  .now-thumb {
+    width: 56px; height: 56px;
+    border-radius: 4px;
+    flex-shrink: 0;
+    overflow: hidden;
+    transition: border-radius 0.4s;
+  }
+  .now-thumb img { width: 100%; height: 100%; object-fit: cover; }
+  .now-thumb.playing { animation: morph 8s ease-in-out infinite; }
+  @keyframes morph {
+    0%, 100% { border-radius: 4px; }
+    25% { border-radius: 50%; }
+    50% { border-radius: 4px; }
+    75% { border-radius: 50%; }
+  }
+  .now-info { overflow: hidden; }
+  .now-name {
+    font-size: 14px;
+    font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    transition: color 0.2s;
+  }
+  .now-name:hover { text-decoration: underline; cursor: pointer; }
+  .now-artist { font-size: 12px; color: var(--muted); }
+  .now-artist:hover { text-decoration: underline; color: white; cursor: pointer; }
+
+  .controls { display: flex; flex-direction: column; align-items: center; gap: 8px; flex: 2; }
+  .controls-btns { display: flex; align-items: center; gap: 20px; }
+  .ctrl-btn {
+    background: none; border: none; color: var(--muted);
+    cursor: pointer;
+    transition: color 0.15s, transform 0.1s;
+    display: flex; align-items: center; justify-content: center;
+    width: 32px; height: 32px;
+  }
+  .ctrl-btn svg { width: 16px; height: 16px; fill: currentColor; }
+  .ctrl-btn:hover { color: white; transform: scale(1.1); }
+  .ctrl-btn.active { color: var(--green); }
+
+  .play-ctrl {
+    width: 32px; height: 32px;
+    background: white; border: none; border-radius: 50%;
+    color: black;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: transform 0.1s;
+  }
+  .play-ctrl svg { width: 16px; height: 16px; fill: black; }
+  .play-ctrl:hover { transform: scale(1.06); }
+
+  .progress-bar {
+    display: flex; align-items: center; gap: 8px; width: 100%;
+  }
+  .progress-time { font-size: 11px; color: var(--muted); min-width: 35px; text-align: center; }
+  .progress-track {
+    flex: 1; height: 4px;
+    background: #4d4d4d;
+    border-radius: 2px;
+    cursor: pointer;
+    position: relative;
+    overflow: visible;
+  }
+  .progress-fill {
+    height: 100%;
+    background: white;
+    border-radius: 2px;
+    width: 0%;
+    transition: background 0.2s;
+    position: relative;
+  }
+  .progress-track:hover .progress-fill { background: var(--green); }
+  .progress-thumb {
+    width: 12px; height: 12px;
+    background: white;
+    border-radius: 50%;
+    position: absolute;
+    right: -6px; top: -4px;
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+  .progress-track:hover .progress-thumb { opacity: 1; }
+
+  .vol-ctrl { display: flex; align-items: center; gap: 8px; flex: 1; justify-content: flex-end; }
+  .vol-btn {
+    background: none; border: none; color: var(--muted);
+    cursor: pointer; display: flex; align-items: center;
+  }
+  .vol-btn svg { width: 16px; height: 16px; fill: currentColor; }
+  .vol-btn:hover { color: white; }
+  .vol-track {
+    width: 93px; height: 4px;
+    background: #4d4d4d;
+    border-radius: 2px;
+    position: relative;
+    cursor: pointer;
+  }
+  .vol-fill {
+    height: 100%;
+    background: white;
+    border-radius: 2px;
+    width: 70%;
+    position: relative;
+  }
+  .vol-track:hover .vol-fill { background: var(--green); }
+  .vol-thumb {
+    width: 12px; height: 12px;
+    background: white;
+    border-radius: 50%;
+    position: absolute;
+    right: -6px; top: -4px;
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+  .vol-track:hover .vol-thumb { opacity: 1; }
+
+  /* GAME SECTION */
+  .game-section {
+    padding: 32px;
+    background: linear-gradient(180deg, rgba(29,185,84,0.05) 0%, transparent 100%);
+  }
+
+  .game-container {
+    max-width: 500px;
+    margin: 0 auto;
+    background: var(--card);
+    border-radius: 16px;
+    padding: 32px;
+    border: 1px solid rgba(29,185,84,0.2);
+  }
+
+  .game-title {
+    text-align: center;
+    font-size: 26px;
+    font-weight: 900;
+    margin-bottom: 6px;
+    letter-spacing: 2px;
+  }
+
+  .game-subtitle {
+    text-align: center;
+    color: var(--muted);
+    font-size: 13px;
+    margin-bottom: 24px;
+  }
+
+  .game-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 24px;
+    align-items: center;
+  }
+
+  .game-row {
+    display: flex;
+    gap: 6px;
+  }
+
+  .game-cell {
+    width: 52px; height: 52px;
+    border: 2px solid #3a3a3a;
+    border-radius: 4px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px;
+    font-weight: 900;
+    text-transform: uppercase;
+    transition: border-color 0.1s, transform 0.1s, background 0.3s;
+  }
+
+  .game-cell.filled { border-color: #818181; }
+  .game-cell.correct { background: var(--green); border-color: var(--green); color: black; }
+  .game-cell.present { background: #b59f3b; border-color: #b59f3b; color: black; }
+  .game-cell.absent { background: #3a3a3a; border-color: #3a3a3a; }
+  .game-cell.pop { animation: pop 0.1s ease-in-out; }
+  .game-cell.shake { animation: shake 0.5s ease-in-out; }
+  .game-cell.flip { animation: flip 0.5s ease-in-out; }
+
+  @keyframes pop {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.12); }
+    100% { transform: scale(1); }
+  }
+
+  @keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    20% { transform: translateX(-6px); }
+    40% { transform: translateX(6px); }
+    60% { transform: translateX(-4px); }
+    80% { transform: translateX(4px); }
+  }
+
+  @keyframes flip {
+    0% { transform: rotateX(0); }
+    50% { transform: rotateX(-90deg); }
+    100% { transform: rotateX(0); }
+  }
+
+  /* KEYBOARD */
+  .keyboard { display: flex; flex-direction: column; gap: 8px; align-items: center; }
+  .keyboard-row { display: flex; gap: 6px; }
+
+  .key {
+    min-width: 36px; height: 52px;
+    background: #818384;
+    border: none;
+    border-radius: 4px;
+    color: white;
+    font-size: 13px;
+    font-weight: 700;
+    font-family: inherit;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: background 0.2s, transform 0.1s;
+    padding: 0 6px;
+    text-transform: uppercase;
+  }
+  .key:hover { transform: scale(1.05); }
+  .key.wide { min-width: 60px; font-size: 12px; }
+  .key.correct { background: var(--green); color: black; }
+  .key.present { background: #b59f3b; }
+  .key.absent { background: #3a3a3a; }
+
+  .game-msg {
+    text-align: center;
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--green);
+    min-height: 24px;
+    margin-bottom: 12px;
+  }
+
+  .game-hint {
+    text-align: center;
+    font-size: 13px;
+    color: var(--muted);
+    margin-top: 16px;
+    font-style: italic;
+  }
+
+  /* LOVE LETTER */
+  .love-letter {
+    background: var(--card);
+    border-radius: 12px;
+    padding: 32px;
+    border-left: 4px solid var(--green);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .love-letter::before {
+    content: '💚';
+    position: absolute;
+    top: -10px; right: -10px;
+    font-size: 80px;
+    opacity: 0.1;
+  }
+
+  .love-letter p {
+    color: var(--muted);
+    font-size: 15px;
+    line-height: 1.8;
+    margin-bottom: 12px;
+  }
+
+  .love-letter p:last-child { margin-bottom: 0; }
+  .love-letter strong { color: white; }
+
+  /* COUNTER */
+  .counter-section {
+    padding: 32px;
+  }
+
+  .counter-container {
+    max-width: 560px;
+    margin: 0 auto;
+    background: var(--card);
+    border-radius: 16px;
+    padding: 32px;
+    border: 1px solid rgba(29,185,84,0.2);
+    text-align: center;
+  }
+
+  .counter-label {
+    font-size: 14px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 8px;
+  }
+
+  .counter-title {
+    font-size: 22px;
+    font-weight: 900;
+    margin-bottom: 24px;
+    color: var(--green);
+  }
+
+  .counter-grid {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    flex-wrap: nowrap;
+  }
+
+  .counter-item {
+    background: rgba(29,185,84,0.08);
+    border: 1px solid rgba(29,185,84,0.15);
+    border-radius: 12px;
+    padding: 14px 14px;
+    min-width: 72px;
+    flex: 1;
+    max-width: 100px;
+  }
+
+  .counter-value {
+    font-size: 36px;
+    font-weight: 900;
+    color: var(--text);
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .counter-unit {
+    font-size: 11px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-top: 6px;
+  }
+
+  .counter-since {
+    font-size: 13px;
+    color: var(--muted);
+    margin-top: 20px;
+  }
+
+  /* SCROLLBAR */
+  ::-webkit-scrollbar { width: 8px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.3); border-radius: 4px; }
+  ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.5); }
+
+  /* PAGE TRANSITIONS */
+  .page { display: none; }
+  .page.active { display: block; }
+
+  /* NO AUDIO NOTICE */
+  .no-audio-notice {
+    background: rgba(29,185,84,0.1);
+    border: 1px solid rgba(29,185,84,0.3);
+    border-radius: 8px;
+    padding: 12px 16px;
+    margin: 0 32px 24px;
+    font-size: 13px;
+    color: var(--muted);
+    display: none;
+  }
+
+  .mobile-overlay {
+    display: none;
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 768px) {
+    .app {
+      display: block;
+      height: 100dvh;
+      min-height: 100dvh;
+      padding: 0;
+    }
+    .sidebar {
+      display: flex;
+      position: fixed;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      width: min(78vw, 300px);
+      z-index: 80;
+      border-radius: 0;
+      transform: translateX(-105%);
+      transition: transform 0.25s ease;
+    }
+    .sidebar.open { transform: translateX(0); }
+    .mobile-overlay {
+      display: block;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s ease;
+      z-index: 70;
+    }
+    .mobile-overlay.show {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    body.menu-open { overflow: hidden; }
+    .main {
+      border-radius: 0;
+      height: calc(100dvh - 84px);
+      overflow-y: auto;
+      padding-bottom: 76px;
+    }
+    .songs-header, .song-album { display: none; }
+    .song-row { grid-template-columns: 40px 1fr auto; }
+    .hero { flex-direction: column; align-items: center; text-align: center; min-height: auto; padding: 24px 16px; }
+    .hero-cover { width: 180px; height: 180px; }
+    .hero-info { align-items: center; }
+    .hero-title { font-size: 32px; }
+    .section { padding: 0 16px 24px; }
+    .actions { padding: 16px; }
+
+    /* Counter mobile */
+    .counter-section { padding: 16px; }
+    .counter-container { padding: 20px 12px; }
+    .counter-grid { flex-wrap: wrap; gap: 8px; }
+    .counter-item { min-width: 60px; padding: 10px 8px; flex: 0 0 calc(33.33% - 6px); max-width: none; }
+    .counter-value { font-size: 26px; }
+    .counter-unit { font-size: 10px; }
+    .counter-title { font-size: 18px; margin-bottom: 16px; }
+
+    /* Player mobile */
+    .player {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 50;
+      border-top: none;
+      border-radius: 0;
+      padding: 8px 10px calc(8px + env(safe-area-inset-bottom));
+    }
+    .now-thumb { width: 40px; height: 40px; }
+    .now-playing { gap: 8px; }
+    .now-artist { display: none; }
+    .now-name { font-size: 12px; }
+    .controls { gap: 4px; }
+    .controls-btns { gap: 12px; }
+    .progress-bar { display: none; }
+    .vol-ctrl { display: none; }
+
+    /* Game mobile */
+    .game-section { padding: 16px; }
+    .game-container { padding: 20px 12px; }
+    .game-cell { width: 38px; height: 38px; font-size: 16px; }
+    .key { min-width: 28px; height: 44px; font-size: 11px; }
+    .key.wide { min-width: 48px; }
+
+    /* Cards mobile */
+    .cards-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+
+    /* Love letter mobile */
+    .love-letter { padding: 20px 16px; margin: 0; }
+    .love-letter p { font-size: 14px; }
+
+    .main-header { padding: 12px 16px; }
+    .nav-arrows .nav-btn { display: none; }
+    .mobile-menu-btn { display: flex; }
+    .no-audio-notice { margin: 0 16px 16px; }
+  }
+
+  @media (max-width: 400px) {
+    .hero-cover { width: 150px; height: 150px; }
+    .hero-title { font-size: 26px; }
+    .game-cell { width: 32px; height: 32px; font-size: 14px; }
+    .key { min-width: 24px; height: 40px; font-size: 10px; }
+    .key.wide { min-width: 40px; }
+    .counter-item { flex: 0 0 calc(33.33% - 6px); }
+    .counter-value { font-size: 22px; }
+    .cards-grid { grid-template-columns: 1fr 1fr; gap: 8px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="app">
+  <!-- SIDEBAR -->
+  <nav class="sidebar">
+    <div class="logo">
+      <svg viewBox="0 0 24 24"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/></svg>
+      <span>Spotiamo</span>
+    </div>
+
+    <div class="nav">
+      <a class="nav-item active" onclick="showPage('home')">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.5 3.247a1 1 0 0 0-1 0L4 7.577V20h4.5v-6a1 1 0 0 1 1-1h5a1 1 0 0 1 1 1v6H20V7.577l-7.5-4.33zm-2-1.732a3 3 0 0 1 3 0l7.5 4.33a2 2 0 0 1 1 1.732V21a1 1 0 0 1-1 1H14a1 1 0 0 1-1-1v-6h-2v6a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V7.577a2 2 0 0 1 1-1.732l7.5-4.33z"/></svg>
+        Início
+      </a>
+      <a class="nav-item" onclick="showPage('game')">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M10.533 1.279c-5.18 0-9.407 4.14-9.407 9.279s4.226 9.279 9.407 9.279c2.234 0 4.29-.77 5.907-2.058l4.353 4.353a1 1 0 1 0 1.414-1.414l-4.344-4.344a9.157 9.157 0 0 0 2.077-5.816c0-5.14-4.226-9.28-9.407-9.28zm-7.407 9.279c0-4.006 3.302-7.279 7.407-7.279s7.407 3.273 7.407 7.279-3.302 7.279-7.407 7.279-7.407-3.273-7.407-7.279z"/></svg>
+        Jogar
+      </a>
+      <a class="nav-item" onclick="showPage('letter')">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 21.593c-5.63-5.539-11-10.297-11-14.402 0-3.791 3.068-5.191 5.281-5.191 1.312 0 4.151.501 5.719 4.457 1.59-3.968 4.464-4.447 5.726-4.447 2.54 0 5.274 1.621 5.274 5.181 0 4.069-5.136 8.625-11 14.402z"/></svg>
+        Carta de Amor
+      </a>
+    </div>
+
+    <div>
+      <div class="library-header" style="margin-bottom:16px">
+        <span>Nossa Playlist</span>
+      </div>
+
+      <div class="playlist-item" onclick="showPage('home'); document.querySelector('.nav-item').click();">
+        <div class="playlist-thumb">
+          <img src="img/img1.jpeg" alt="">
+        </div>
+        <div class="playlist-info">
+          <div class="playlist-name">Músicas de Nós</div>
+          <div class="playlist-sub">Playlist • 12 músicas</div>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <div class="mobile-overlay" onclick="closeMobileMenu()"></div>
+
+  <!-- MAIN CONTENT -->
+  <main class="main">
+    <div class="main-header">
+      <div class="nav-arrows">
+        <button class="mobile-menu-btn" onclick="toggleMobileMenu()" aria-label="Abrir menu">
+          <svg viewBox="0 0 24 24"><path d="M3 6.75A.75.75 0 0 1 3.75 6h16.5a.75.75 0 0 1 0 1.5H3.75A.75.75 0 0 1 3 6.75zm0 5.25a.75.75 0 0 1 .75-.75h16.5a.75.75 0 0 1 0 1.5H3.75A.75.75 0 0 1 3 12zm0 5.25a.75.75 0 0 1 .75-.75h16.5a.75.75 0 0 1 0 1.5H3.75a.75.75 0 0 1-.75-.75z"/></svg>
+        </button>
+        <button class="nav-btn"><svg viewBox="0 0 16 16"><path d="M11.03.47a.75.75 0 0 1 0 1.06L4.56 8l6.47 6.47a.75.75 0 1 1-1.06 1.06L2.44 8 9.97.47a.75.75 0 0 1 1.06 0z"/></svg></button>
+        <button class="nav-btn"><svg viewBox="0 0 16 16"><path d="M4.97.47a.75.75 0 0 0 0 1.06L11.44 8l-6.47 6.47a.75.75 0 1 0 1.06 1.06L13.56 8 6.03.47a.75.75 0 0 0-1.06 0z"/></svg></button>
+      </div>
+      <button class="user-btn">
+        <div class="user-avatar">
+          <img src="img/Img2.jpeg" alt="C">
+        </div>
+        Clarissa
+      </button>
+    </div>
+
+    <!-- HOME PAGE -->
+    <div class="page active" id="page-home">
+      <div class="hero">
+        <div class="hero-cover">
+          <img src="img/img1.jpeg" alt="Para Clarissa">
+        </div>
+        <div class="hero-info">
+          <span class="hero-type">Álbum especial</span>
+          <h1 class="hero-title">Para Clarissa</h1>
+          <p class="hero-desc">Uma coleção de sentimentos, memórias e amor infinito. Cada faixa é um pedaço de tudo que você significa pra mim. 🌿</p>
+          <p class="hero-meta"><span>Eu</span> • 2024 • <span>12 músicas</span> • Duração: para sempre</p>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button class="play-btn" onclick="togglePlay()">
+          <svg id="hero-play-icon" viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg>
+        </button>
+        <button class="heart-btn liked" id="main-heart" onclick="this.classList.toggle('liked')">
+          <svg viewBox="0 0 24 24"><path d="M12 21.593c-5.63-5.539-11-10.297-11-14.402 0-3.791 3.068-5.191 5.281-5.191 1.312 0 4.151.501 5.719 4.457 1.59-3.968 4.464-4.447 5.726-4.447 2.54 0 5.274 1.621 5.274 5.181 0 4.069-5.136 8.625-11 14.402z"/></svg>
+        </button>
+        <button style="background:none;border:none;color:var(--muted);font-size:22px;cursor:pointer;">•••</button>
+      </div>
+
+      <div class="section">
+        <div class="songs-header">
+          <span>#</span>
+          <span>Título</span>
+          <span>Álbum</span>
+          <svg viewBox="0 0 16 16" width="16" height="16" fill="#B3B3B3"><path d="M8 1.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13zM0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8z"/><path d="M8 3.25a.75.75 0 0 1 .75.75v3.25H11a.75.75 0 0 1 0 1.5H7.25V4A.75.75 0 0 1 8 3.25z"/></svg>
+        </div>
+
+        <div id="songs-list"></div>
+      </div>
+
+      <div class="section">
+        <h2 class="section-title">Momentos que guardo 📸</h2>
+        <div class="cards-grid" id="moments-grid"></div>
+      </div>
+    </div>
+
+    <!-- GAME PAGE -->
+    <div class="page" id="page-game">
+      <div class="game-section">
+        <h2 class="section-title" style="padding:0 0 8px; text-align: center;">🎮 O Jogo</h2>
+        <p style="color:var(--muted);margin-bottom:32px;font-size:14px;text-align: center;">Tente adivinhar a palavra secreta de 8 letras. É uma pessoa muito especial! 💚</p>
+
+        <div class="game-container">
+          <div class="game-title">TERMO</div>
+          <div class="game-subtitle">Adivinhe a palavra em 6 tentativas</div>
+          <div class="game-msg" id="game-msg"></div>
+          <div class="game-grid" id="game-grid"></div>
+          <div class="keyboard" id="keyboard"></div>
+          <div class="game-hint" id="game-hint"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- LETTER PAGE -->
+    <div class="page" id="page-letter">
+      <div style="padding:32px">
+        <h2 class="section-title">💌 Carta de Amor</h2>
+        <div class="love-letter">
+          <p>Oi, <strong>Clarissa</strong> 🌿</p>
+          <p>
+            Não sei exatamente como colocar em palavras tudo que sinto, mas fiz esse espacinho especialmente pra você. É pequeno, e simples.
+          </p>
+          <p>
+            Eu me importo com cada detalhe seu. Com a forma como você ri, com a sua voz quando me conta algo animada, com o seu jeito de olhar pro mundo. Com <strong>tudo que você é e faz</strong>.
+          </p>
+          <p>
+            Cada dia ao seu lado parece a música certa tocando na hora certa. Você é minha <strong>faixa favorita</strong>, Clarissa é a aquela que nunca paro de ouvir, que não cansa, que sempre tem algo novo pra descobrir.
+          </p>
+          <p>
+            Obrigado por existir, por ser quem você é, me completar, e por me deixar fazer parte da sua vida.
+          </p>
+          <p style="color:white;font-weight:700;font-size:16px;margin-top:8px">Com todo o meu amor 💚</p>
+        </div>
+
+        <div class="counter-section">
+          <div class="counter-container">
+            <div class="counter-title">Juntos há 💚</div>
+            <div class="counter-grid">
+              <div class="counter-item">
+                <div class="counter-value" id="counter-years">0</div>
+                <div class="counter-unit">Anos</div>
+              </div>
+              <div class="counter-item">
+                <div class="counter-value" id="counter-months">0</div>
+                <div class="counter-unit">Meses</div>
+              </div>
+              <div class="counter-item">
+                <div class="counter-value" id="counter-days">0</div>
+                <div class="counter-unit">Dias</div>
+              </div>
+              <div class="counter-item">
+                <div class="counter-value" id="counter-hours">0</div>
+                <div class="counter-unit">Horas</div>
+              </div>
+              <div class="counter-item">
+                <div class="counter-value" id="counter-minutes">0</div>
+                <div class="counter-unit">Minutos</div>
+              </div>
+              <div class="counter-item">
+                <div class="counter-value" id="counter-seconds">0</div>
+                <div class="counter-unit">Segundos</div>
+              </div>
+            </div>
+            <div class="counter-since">Desde 22 de novembro de 2025 💚</div>
+            <br>
+            <div class="counter-label">E que esse contador nunca pare.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- PLAYER -->
+  <footer class="player">
+    <div class="now-playing">
+      <div class="now-thumb" id="player-thumb">
+        <img src="img/img1.jpeg" alt="" id="player-thumb-img">
+      </div>
+      <div class="now-info">
+        <div class="now-name" id="player-name">Escolha uma faixa</div>
+        <div class="now-artist" id="player-artist">Para Clarissa</div>
+      </div>
+      <button class="heart-btn" id="player-heart" style="margin-left:8px" onclick="this.classList.toggle('liked')">
+        <svg viewBox="0 0 24 24" width="20" height="20"><path d="M12 21.593c-5.63-5.539-11-10.297-11-14.402 0-3.791 3.068-5.191 5.281-5.191 1.312 0 4.151.501 5.719 4.457 1.59-3.968 4.464-4.447 5.726-4.447 2.54 0 5.274 1.621 5.274 5.181 0 4.069-5.136 8.625-11 14.402z" fill="currentColor"/></svg>
+      </button>
+    </div>
+
+    <div class="controls">
+      <div class="controls-btns">
+        <button class="ctrl-btn" id="shuffle-btn" onclick="toggleShuffle()">
+          <svg viewBox="0 0 16 16"><path d="M13.151.922a.75.75 0 1 0-1.06 1.06L13.109 3H11.16a3.75 3.75 0 0 0-2.873 1.34l-6.173 7.356A2.25 2.25 0 0 1 .39 12.5H0V14h.391a3.75 3.75 0 0 0 2.873-1.34l6.173-7.356a2.25 2.25 0 0 1 1.724-.804h1.947l-1.017 1.018a.75.75 0 0 0 1.06 1.06l2.306-2.306a.75.75 0 0 0 0-1.06L13.15.922zM.391 3.5H0V2h.391c1.109 0 2.16.49 2.873 1.34L4.89 5.277l-.979 1.167-1.796-2.14A2.25 2.25 0 0 0 .39 3.5z"/><path d="m7.5 10.723.98-1.167 1.796 2.14a2.25 2.25 0 0 0 1.724.804h1.947l-1.017-1.018a.75.75 0 1 1 1.06-1.06l2.306 2.306a.75.75 0 0 1 0 1.06L13.15 15.09a.75.75 0 1 1-1.06-1.06l1.018-1.018H11.16a3.75 3.75 0 0 1-2.873-1.34L7.5 10.723z"/></svg>
+        </button>
+        <button class="ctrl-btn" onclick="prevSong()">
+          <svg viewBox="0 0 16 16"><path d="M3.3 1a.7.7 0 0 1 .7.7v5.15l9.95-5.744a.7.7 0 0 1 1.05.606v12.575a.7.7 0 0 1-1.05.607L4 9.149V14.3a.7.7 0 0 1-.7.7H2.7a.7.7 0 0 1-.7-.7V1.7a.7.7 0 0 1 .7-.7h.6z"/></svg>
+        </button>
+        <button class="play-ctrl" id="main-play" onclick="togglePlay()">
+          <svg id="play-icon" viewBox="0 0 16 16"><polygon points="4,2 14,8 4,14"/></svg>
+        </button>
+        <button class="ctrl-btn" onclick="nextSong()">
+          <svg viewBox="0 0 16 16"><path d="M12.7 1a.7.7 0 0 0-.7.7v5.15L2.05 1.107A.7.7 0 0 0 1 1.712v12.575a.7.7 0 0 0 1.05.607L12 9.149V14.3a.7.7 0 0 0 .7.7h.6a.7.7 0 0 0 .7-.7V1.7a.7.7 0 0 0-.7-.7h-.6z"/></svg>
+        </button>
+        <button class="ctrl-btn" id="repeat-btn" onclick="toggleRepeat()">
+          <svg viewBox="0 0 16 16"><path d="M0 4.75A3.75 3.75 0 0 1 3.75 1h8.5A3.75 3.75 0 0 1 16 4.75v5a3.75 3.75 0 0 1-3.75 3.75H9.81l1.018 1.018a.75.75 0 1 1-1.06 1.06L7.46 13.28a.75.75 0 0 1 0-1.06l2.308-2.307a.75.75 0 0 1 1.06 1.06L9.811 12h2.439a2.25 2.25 0 0 0 2.25-2.25v-5a2.25 2.25 0 0 0-2.25-2.25h-8.5A2.25 2.25 0 0 0 1.5 4.75v5A2.25 2.25 0 0 0 3.75 12H5v1.5H3.75A3.75 3.75 0 0 1 0 9.75v-5z"/></svg>
+        </button>
+      </div>
+      <div class="progress-bar">
+        <span class="progress-time" id="prog-current">0:00</span>
+        <div class="progress-track" id="progress-track">
+          <div class="progress-fill" id="progress-fill">
+            <div class="progress-thumb"></div>
+          </div>
+        </div>
+        <span class="progress-time" id="prog-total">0:00</span>
+      </div>
+    </div>
+
+    <div class="vol-ctrl">
+      <button class="vol-btn" id="vol-icon" onclick="toggleMute()">
+        <svg viewBox="0 0 16 16"><path d="M9.741.85a.75.75 0 0 1 .375.65v13a.75.75 0 0 1-1.125.65l-6.925-4a3.642 3.642 0 0 1-1.33-4.967 3.639 3.639 0 0 1 1.33-1.332l6.925-4a.75.75 0 0 1 .75 0zm-6.924 5.3a2.139 2.139 0 0 0 0 3.7l5.8 3.35V2.8l-5.8 3.35zm8.683 4.29V5.56a2.75 2.75 0 0 1 0 4.88z"/><path d="M11.5 13.614a5.752 5.752 0 0 0 0-11.228v1.55a4.252 4.252 0 0 1 0 8.127v1.55z"/></svg>
+      </button>
+      <div class="vol-track" id="vol-track">
+        <div class="vol-fill" id="vol-fill">
+          <div class="vol-thumb"></div>
+        </div>
+      </div>
+    </div>
+  </footer>
+</div>
+
+<!-- AUDIO ELEMENT -->
+<audio id="audio-player" preload="auto"></audio>
+
+<script>
+// ===================== DATA =====================
+// Para adicionar músicas: coloque arquivos .mp3 na pasta "audio/" e preencha o campo "audio"
+// Para adicionar fotos: coloque arquivos na pasta "img/" e atualize o campo "img"
+const songs = [
+  { img: 'img/img1.jpeg', name: 'Você Me Completa', artist: 'Sentimentos', album: 'Para Clarissa', duration: '3:24', audio: 'mp3/The Cure - Just Like Heaven - TheCureVEVO (youtube).mp3' },
+  { img: 'img/Img4.jpeg', name: 'Madrugadas com Você', artist: 'Memórias', album: 'Para Clarissa', duration: '4:12', audio: 'mp3/The Cure - Pictures Of You - TheCureVEVO (youtube).mp3' },
+  { img: 'img/img3.jpeg', name: 'Seus Bom dias', artist: 'Rotinas', album: 'Momentos', duration: '2:58', audio: 'mp3/Fleetwood Mac - Gypsy (Official Music Video) [HD] - Fleetwood Mac (youtube).mp3' },
+  { img: 'img/img2.jpeg', name: 'Seu Sorriso', artist: 'Detalhes', album: 'Para Clarissa', duration: '3:45', audio: 'mp3/David Bowie - Heroes (Official Video) [HD] - David Bowie (youtube).mp3' },
+  { img: 'img/img5.jpeg', name: 'Olhos que Falam', artist: 'Clarissa', album: 'Para Clarissa', duration: '4:02', audio: 'mp3/Depeche Mode - Enjoy the Silence - DepecheModeVEVO (youtube).mp3' },
+  { img: 'img/filmespipoca.jpeg', name: 'Filmes e Pipoca', artist: 'Memórias', album: 'Momentos', duration: '3:30', audio: 'mp3/Pet Shop Boys - Always On My Mind - Michael (youtube).mp3' },
+  { img: 'img/WhatsApp%20Image%202026-03-06%20at%2022.29.17.jpeg', name: 'Começo', artist: 'História', album: 'Momentos', duration: '5:10', audio: 'mp3/Harry Styles - Sunflower, Vol. 6 (Official Audio) - HarryStylesVEVO (youtube).mp3' },
+  { img: 'img/WhatsApp%20Image%202026-03-06%20at%2022.29.18.jpeg', name: 'Sempre juntos', artist: 'Amor', album: 'Para Clarissa', duration: '3:18', audio: 'mp3/Harry Styles - Lights Up (Official Audio) - HarryStylesVEVO (youtube).mp3' },
+  { img: 'img/img3.jpeg', name: 'Noossa Música', artist: 'Nós', album: 'Para Clarissa', duration: '4:44', audio: 'mp3/Eyedress & Dent May - Something About You - David Dean Burkhart (youtube).mp3' },
+  { img: 'img/img4.jpeg', name: 'Mensagens às 3am', artist: 'Segredos', album: 'Para Clarissa', duration: '2:33', audio: 'mp3/Djavan - Um Amor Puro (Áudio Oficial) - DjavanVEVO (youtube).mp3' },
+  { img: 'img/img5.jpeg', name: 'Momentos juntos', artist: 'Momentos', album: 'Momentos', duration: '3:55', audio: 'mp3/Final Feliz - Jorge Vercilo e Djavan - Marcia Litman (youtube).mp3' },
+  { img: 'img/WhatsApp%20Image%202026-03-06%20at%2022.20.21.jpeg', name: 'Você', artist: 'Perfeição', album: 'Para Clarissa', duration: '4:20', audio: 'mp3/Tribalistas - Velha Infância - Jonathan Gomes Pereira (youtube).mp3' },
+];
+
+const moments = [
+  { img: 'img/Primeiros%20dias.jpeg', name: 'Primeiros Dias', desc: 'Quando tudo começou' },
+  { img: 'img/seuaniversario.jpeg', name: 'Seu Aniversário', desc: 'Um dia especial' },
+  { img: 'img/noitesestreladas.jpeg', name: 'Noites Estreladas', desc: 'Conversas até o amanhecer' },
+  { img: 'img/img5.jpeg', name: 'Momentos Juntos', desc: 'Cada segundo ao seu lado' },
+  { img: 'img/WhatsApp%20Image%202026-03-06%20at%2022.29.17.jpeg', name: 'Nosso Mundo', desc: 'Só nós dois' },
+  { img: 'img/WhatsApp%20Image%202026-03-06%20at%2022.29.18.jpeg', name: 'Pra Sempre', desc: 'Isso é só o começo 💚' },
+];
+
+// SVG icons
+const ICON_PLAY = '<svg viewBox="0 0 16 16"><polygon points="4,2 14,8 4,14"/></svg>';
+const ICON_PAUSE = '<svg viewBox="0 0 16 16"><rect x="3" y="2" width="3.5" height="12" rx="1"/><rect x="9.5" y="2" width="3.5" height="12" rx="1"/></svg>';
+
+// ===================== RENDER =====================
+function renderSongs() {
+  const container = document.getElementById('songs-list');
+  container.innerHTML = songs.map((s, i) => `
+    <div class="song-row" id="song-row-${i}" onclick="playSong(${i})">
+      <div class="song-num">
+        <span class="song-play-icon"><svg viewBox="0 0 16 16" width="14" height="14" fill="white"><polygon points="4,2 14,8 4,14"/></svg></span>
+        <span class="song-num-text">${i + 1}</span>
+      </div>
+      <div class="song-info">
+        <div class="song-thumb"><img src="${s.img}" alt="${s.name}"></div>
+        <div>
+          <div class="song-name">${s.name}</div>
+          <div class="song-artist">${s.artist}</div>
+        </div>
+      </div>
+      <div class="song-album">${s.album}</div>
+      <div class="song-duration">${s.duration}</div>
+    </div>
+  `).join('');
+}
+
+function renderMoments() {
+  const container = document.getElementById('moments-grid');
+  container.innerHTML = moments.map((m, i) => `
+    <div class="card">
+      <div class="card-cover">
+        <img src="${m.img}" alt="${m.name}">
+        <button class="card-play">
+          <svg viewBox="0 0 24 24"><polygon points="6,3 20,12 6,21"/></svg>
+        </button>
+      </div>
+      <div class="card-name">${m.name}</div>
+      <div class="card-desc">${m.desc}</div>
+    </div>
+  `).join('');
+}
+
+// ===================== AUDIO PLAYER =====================
+const audioEl = document.getElementById('audio-player');
+let currentSong = 0;
+let isPlaying = false;
+let isShuffle = false;
+let repeatMode = 0; // 0=off, 1=all, 2=one
+let progressInterval = null;
+let progressVal = 0;
+
+function playSong(idx) {
+  currentSong = idx;
+  const s = songs[idx];
+
+  // Update UI
+  document.getElementById('player-name').textContent = s.name;
+  document.getElementById('player-artist').textContent = s.artist;
+  document.getElementById('player-thumb-img').src = s.img;
+  highlightActiveSong(idx);
+
+  if (s.audio) {
+    // Real audio playback
+    audioEl.src = s.audio;
+    audioEl.play();
+    isPlaying = true;
+    clearInterval(progressInterval);
+    updatePlayIcons();
+    document.getElementById('player-thumb').classList.add('playing');
+  } else {
+    // Simulated playback (no audio file yet)
+    progressVal = 0;
+    document.getElementById('prog-total').textContent = s.duration;
+    updateProgress();
+    startSimulated();
+  }
+}
+
+function highlightActiveSong(idx) {
+  document.querySelectorAll('.song-row').forEach(r => r.classList.remove('active-song'));
+  const row = document.getElementById('song-row-' + idx);
+  if (row) row.classList.add('active-song');
+}
+
+function startSimulated() {
+  isPlaying = true;
+  updatePlayIcons();
+  document.getElementById('player-thumb').classList.add('playing');
+  clearInterval(progressInterval);
+  progressInterval = setInterval(() => {
+    progressVal = progressVal + 0.3;
+    if (progressVal >= 100) {
+      progressVal = 0;
+      onSongEnd();
+      return;
+    }
+    updateProgress();
+    updateSimulatedTime();
+  }, 300);
+}
+
+function stopSimulated() {
+  clearInterval(progressInterval);
+}
+
+function togglePlay() {
+  if (isPlaying) {
+    isPlaying = false;
+    if (songs[currentSong].audio && audioEl.src) {
+      audioEl.pause();
+    } else {
+      stopSimulated();
+    }
+    updatePlayIcons();
+    document.getElementById('player-thumb').classList.remove('playing');
+  } else {
+    if (songs[currentSong].audio && audioEl.src) {
+      audioEl.play();
+      isPlaying = true;
+      updatePlayIcons();
+      document.getElementById('player-thumb').classList.add('playing');
+    } else {
+      startSimulated();
+    }
+  }
+}
+
+function updatePlayIcons() {
+  const icon = isPlaying ? ICON_PAUSE : ICON_PLAY;
+  document.getElementById('play-icon').outerHTML = isPlaying
+    ? '<svg id="play-icon" viewBox="0 0 16 16"><rect x="3" y="2" width="3.5" height="12" rx="1"/><rect x="9.5" y="2" width="3.5" height="12" rx="1"/></svg>'
+    : '<svg id="play-icon" viewBox="0 0 16 16"><polygon points="4,2 14,8 4,14"/></svg>';
+  document.getElementById('hero-play-icon').outerHTML = isPlaying
+    ? '<svg id="hero-play-icon" viewBox="0 0 24 24"><rect x="5" y="3" width="4.5" height="18" rx="1.5"/><rect x="14.5" y="3" width="4.5" height="18" rx="1.5"/></svg>'
+    : '<svg id="hero-play-icon" viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg>';
+}
+
+function nextSong() {
+  if (isShuffle) {
+    let next;
+    do { next = Math.floor(Math.random() * songs.length); } while (next === currentSong && songs.length > 1);
+    playSong(next);
+  } else {
+    playSong((currentSong + 1) % songs.length);
+  }
+}
+
+function prevSong() {
+  // If audio and >3s in, restart
+  if (songs[currentSong].audio && audioEl.currentTime > 3) {
+    audioEl.currentTime = 0;
+    return;
+  }
+  if (progressVal > 5 && !songs[currentSong].audio) {
+    progressVal = 0;
+    updateProgress();
+    updateSimulatedTime();
+    return;
+  }
+  playSong((currentSong - 1 + songs.length) % songs.length);
+}
+
+function onSongEnd() {
+  if (repeatMode === 2) {
+    playSong(currentSong);
+  } else if (repeatMode === 1) {
+    nextSong();
+  } else {
+    if (currentSong < songs.length - 1) {
+      nextSong();
+    } else {
+      isPlaying = false;
+      stopSimulated();
+      updatePlayIcons();
+      document.getElementById('player-thumb').classList.remove('playing');
+    }
+  }
+}
+
+function toggleShuffle() {
+  isShuffle = !isShuffle;
+  document.getElementById('shuffle-btn').classList.toggle('active', isShuffle);
+}
+
+function toggleRepeat() {
+  repeatMode = (repeatMode + 1) % 3;
+  const btn = document.getElementById('repeat-btn');
+  btn.classList.toggle('active', repeatMode > 0);
+  if (repeatMode === 2) {
+    btn.style.position = 'relative';
+    if (!btn.querySelector('.repeat-one')) {
+      const dot = document.createElement('span');
+      dot.className = 'repeat-one';
+      dot.textContent = '1';
+      dot.style.cssText = 'position:absolute;font-size:9px;font-weight:900;bottom:2px;right:2px;color:var(--green);';
+      btn.appendChild(dot);
+    }
+  } else {
+    const dot = btn.querySelector('.repeat-one');
+    if (dot) dot.remove();
+  }
+}
+
+// Audio event listeners
+audioEl.addEventListener('timeupdate', () => {
+  if (!audioEl.duration) return;
+  const pct = (audioEl.currentTime / audioEl.duration) * 100;
+  document.getElementById('progress-fill').style.width = pct + '%';
+  document.getElementById('prog-current').textContent = formatTime(audioEl.currentTime);
+  document.getElementById('prog-total').textContent = formatTime(audioEl.duration);
+});
+
+audioEl.addEventListener('ended', onSongEnd);
+
+audioEl.addEventListener('loadedmetadata', () => {
+  document.getElementById('prog-total').textContent = formatTime(audioEl.duration);
+});
+
+function formatTime(secs) {
+  const m = Math.floor(secs / 60);
+  const s = Math.floor(secs % 60);
+  return `${m}:${s.toString().padStart(2, '0')}`;
+}
+
+// Progress bar seek
+document.getElementById('progress-track').addEventListener('click', function(e) {
+  const rect = this.getBoundingClientRect();
+  const pct = ((e.clientX - rect.left) / rect.width);
+
+  if (songs[currentSong].audio && audioEl.duration) {
+    audioEl.currentTime = pct * audioEl.duration;
+  } else {
+    progressVal = pct * 100;
+    updateProgress();
+    updateSimulatedTime();
+  }
+});
+
+function updateProgress() {
+  document.getElementById('progress-fill').style.width = progressVal + '%';
+}
+
+function updateSimulatedTime() {
+  const parts = songs[currentSong].duration.split(':');
+  const total = parseInt(parts[0]) * 60 + parseInt(parts[1]);
+  const current = Math.floor(total * progressVal / 100);
+  document.getElementById('prog-current').textContent = formatTime(current);
+}
+
+// Volume control
+let volume = 0.7;
+let prevVolume = 0.7;
+audioEl.volume = volume;
+
+document.getElementById('vol-track').addEventListener('click', function(e) {
+  const rect = this.getBoundingClientRect();
+  volume = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
+  audioEl.volume = volume;
+  document.getElementById('vol-fill').style.width = (volume * 100) + '%';
+  updateVolIcon();
+});
+
+function toggleMute() {
+  if (volume > 0) {
+    prevVolume = volume;
+    volume = 0;
+  } else {
+    volume = prevVolume;
+  }
+  audioEl.volume = volume;
+  document.getElementById('vol-fill').style.width = (volume * 100) + '%';
+  updateVolIcon();
+}
+
+function updateVolIcon() {
+  const btn = document.getElementById('vol-icon');
+  if (volume === 0) {
+    btn.innerHTML = '<svg viewBox="0 0 16 16"><path d="M13.86 5.47a.75.75 0 0 0-1.061 0l-1.47 1.47-1.47-1.47A.75.75 0 0 0 8.8 6.53L10.269 8l-1.47 1.47a.75.75 0 1 0 1.06 1.06l1.47-1.47 1.47 1.47a.75.75 0 0 0 1.06-1.06L12.39 8l1.47-1.47a.75.75 0 0 0 0-1.06z"/><path d="M10.116 1.5A.75.75 0 0 0 8.991.85l-6.925 4a3.642 3.642 0 0 0-1.33 4.967 3.639 3.639 0 0 0 1.33 1.332l6.925 4a.75.75 0 0 0 1.125-.649v-13a.75.75 0 0 0-.375-.65zm-1.125 1.3v10.4l-5.8-3.35a2.139 2.139 0 0 1 0-3.7l5.8-3.35z"/></svg>';
+  } else if (volume < 0.5) {
+    btn.innerHTML = '<svg viewBox="0 0 16 16"><path d="M9.741.85a.75.75 0 0 1 .375.65v13a.75.75 0 0 1-1.125.65l-6.925-4a3.642 3.642 0 0 1-1.33-4.967 3.639 3.639 0 0 1 1.33-1.332l6.925-4a.75.75 0 0 1 .75 0zm-6.924 5.3a2.139 2.139 0 0 0 0 3.7l5.8 3.35V2.8l-5.8 3.35zm8.683 4.29V5.56a2.75 2.75 0 0 1 0 4.88z"/></svg>';
+  } else {
+    btn.innerHTML = '<svg viewBox="0 0 16 16"><path d="M9.741.85a.75.75 0 0 1 .375.65v13a.75.75 0 0 1-1.125.65l-6.925-4a3.642 3.642 0 0 1-1.33-4.967 3.639 3.639 0 0 1 1.33-1.332l6.925-4a.75.75 0 0 1 .75 0zm-6.924 5.3a2.139 2.139 0 0 0 0 3.7l5.8 3.35V2.8l-5.8 3.35zm8.683 4.29V5.56a2.75 2.75 0 0 1 0 4.88z"/><path d="M11.5 13.614a5.752 5.752 0 0 0 0-11.228v1.55a4.252 4.252 0 0 1 0 8.127v1.55z"/></svg>';
+  }
+}
+
+// ===================== PAGES =====================
+function showPage(name) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('page-' + name).classList.add('active');
+  event.currentTarget.classList.add('active');
+  closeMobileMenu();
+}
+
+function toggleMobileMenu() {
+  if (window.innerWidth > 768) return;
+  const sidebar = document.querySelector('.sidebar');
+  const overlay = document.querySelector('.mobile-overlay');
+  const isOpen = sidebar.classList.toggle('open');
+  overlay.classList.toggle('show', isOpen);
+  document.body.classList.toggle('menu-open', isOpen);
+}
+
+function closeMobileMenu() {
+  const sidebar = document.querySelector('.sidebar');
+  const overlay = document.querySelector('.mobile-overlay');
+  if (!sidebar || !overlay) return;
+  sidebar.classList.remove('open');
+  overlay.classList.remove('show');
+  document.body.classList.remove('menu-open');
+}
+
+// ===================== GAME =====================
+const SECRET = 'CLARISSA';
+const WORD_LEN = SECRET.length;
+const MAX_TRIES = 6;
+
+let grid = Array.from({length: MAX_TRIES}, () => Array(WORD_LEN).fill(''));
+let currentRow = 0;
+let currentCol = 0;
+let gameOver = false;
+let keyStates = {};
+
+const KEYBOARD = [
+  ['Q','W','E','R','T','Y','U','I','O','P'],
+  ['A','S','D','F','G','H','J','K','L'],
+  ['ENTER','Z','X','C','V','B','N','M','⌫']
+];
+
+function initGame() {
+  const gridEl = document.getElementById('game-grid');
+  gridEl.innerHTML = '';
+  for (let r = 0; r < MAX_TRIES; r++) {
+    const row = document.createElement('div');
+    row.className = 'game-row';
+    row.id = `row-${r}`;
+    for (let c = 0; c < WORD_LEN; c++) {
+      const cell = document.createElement('div');
+      cell.className = 'game-cell';
+      cell.id = `cell-${r}-${c}`;
+      row.appendChild(cell);
+    }
+    gridEl.appendChild(row);
+  }
+
+  const kbEl = document.getElementById('keyboard');
+  kbEl.innerHTML = '';
+  KEYBOARD.forEach(row => {
+    const rowEl = document.createElement('div');
+    rowEl.className = 'keyboard-row';
+    row.forEach(key => {
+      const btn = document.createElement('button');
+      btn.className = 'key' + (key.length > 1 ? ' wide' : '');
+      btn.textContent = key;
+      btn.id = `key-${key}`;
+      btn.onclick = () => handleKey(key);
+      rowEl.appendChild(btn);
+    });
+    kbEl.appendChild(rowEl);
+  });
+}
+
+function handleKey(key) {
+  if (gameOver) return;
+  if (key === '⌫' || key === 'BACKSPACE') {
+    if (currentCol > 0) {
+      currentCol--;
+      grid[currentRow][currentCol] = '';
+      updateCell(currentRow, currentCol, '', '');
+    }
+  } else if (key === 'ENTER') {
+    submitGuess();
+  } else if (/^[A-ZÇ]$/i.test(key) && currentCol < WORD_LEN) {
+    grid[currentRow][currentCol] = key.toUpperCase();
+    updateCell(currentRow, currentCol, key.toUpperCase(), 'filled');
+    animateCell(currentRow, currentCol, 'pop');
+    currentCol++;
+  }
+}
+
+function updateCell(row, col, letter, state) {
+  const cell = document.getElementById(`cell-${row}-${col}`);
+  cell.textContent = letter;
+  cell.className = 'game-cell' + (state ? ' ' + state : '');
+}
+
+function animateCell(row, col, anim) {
+  const cell = document.getElementById(`cell-${row}-${col}`);
+  cell.classList.add(anim);
+  setTimeout(() => cell.classList.remove(anim), 600);
+}
+
+function submitGuess() {
+  if (currentCol < WORD_LEN) {
+    document.getElementById(`row-${currentRow}`).querySelectorAll('.game-cell').forEach(c => {
+      c.classList.add('shake');
+      setTimeout(() => c.classList.remove('shake'), 600);
+    });
+    document.getElementById('game-msg').textContent = `A palavra tem ${WORD_LEN} letras!`;
+    setTimeout(() => document.getElementById('game-msg').textContent = '', 1500);
+    return;
+  }
+
+  const guess = grid[currentRow].join('');
+  const result = evaluateGuess(guess, SECRET);
+
+  result.forEach((state, i) => {
+    setTimeout(() => {
+      const cell = document.getElementById(`cell-${currentRow}-${i}`);
+      cell.classList.add('flip');
+      setTimeout(() => {
+        cell.className = `game-cell ${state}`;
+        cell.textContent = guess[i];
+        updateKeyState(guess[i], state);
+      }, 250);
+    }, i * 150);
+  });
+
+  const allCorrect = result.every(s => s === 'correct');
+  const delay = WORD_LEN * 150 + 400;
+
+  setTimeout(() => {
+    if (allCorrect) {
+      document.getElementById('game-msg').textContent = '🎉 Você encontrou! Era o nome dela!';
+      document.getElementById('game-hint').textContent = '💚 CLARISSA 💚 — a palavra mais bonita que existe!';
+      gameOver = true;
+      celebrate();
+    } else {
+      currentRow++;
+      currentCol = 0;
+      if (currentRow >= MAX_TRIES) {
+        document.getElementById('game-msg').textContent = `A palavra era: ${SECRET}`;
+        document.getElementById('game-hint').textContent = '💚 CLARISSA — sempre a resposta certa!';
+        gameOver = true;
+      } else {
+        const hints = [
+          'Dica: É um nome muito especial 💚',
+          'Dica: Ela tem 8 letras, igual essa pessoa tem 8 qualidades incríveis',
+          'Dica: Começa com C... como "Carinho"',
+          'Dica: Termina em A... como "Amada"',
+          'Dica: É o nome mais bonito que você já ouviu 🌿',
+          'Última chance! Pense no nome mais especial que existe...',
+        ];
+        document.getElementById('game-hint').textContent = hints[currentRow - 1] || '';
+      }
+    }
+  }, delay);
+}
+
+function evaluateGuess(guess, secret) {
+  const result = Array(WORD_LEN).fill('absent');
+  const secretArr = secret.split('');
+  const guessArr = guess.split('');
+
+  guessArr.forEach((l, i) => {
+    if (l === secretArr[i]) {
+      result[i] = 'correct';
+      secretArr[i] = null;
+    }
+  });
+
+  guessArr.forEach((l, i) => {
+    if (result[i] !== 'correct') {
+      const idx = secretArr.indexOf(l);
+      if (idx !== -1) {
+        result[i] = 'present';
+        secretArr[idx] = null;
+      }
+    }
+  });
+
+  return result;
+}
+
+function updateKeyState(letter, state) {
+  const priority = { correct: 3, present: 2, absent: 1 };
+  if (!keyStates[letter] || priority[state] > priority[keyStates[letter]]) {
+    keyStates[letter] = state;
+  }
+  const keyEl = document.getElementById(`key-${letter}`);
+  if (keyEl) keyEl.className = `key ${keyStates[letter]}`;
+}
+
+function celebrate() {
+  let count = 0;
+  const interval = setInterval(() => {
+    createHeart();
+    if (++count > 20) clearInterval(interval);
+  }, 100);
+}
+
+function createHeart() {
+  const heart = document.createElement('div');
+  heart.textContent = ['💚','🌿','✨','💫'][Math.floor(Math.random()*4)];
+  heart.style.cssText = `
+    position:fixed;
+    left:${Math.random()*100}vw;
+    bottom:-50px;
+    font-size:${20+Math.random()*30}px;
+    pointer-events:none;
+    z-index:9999;
+    animation: riseUp 2s ease-out forwards;
+  `;
+  document.body.appendChild(heart);
+  setTimeout(() => heart.remove(), 2000);
+}
+
+// Add rise animation
+const riseStyle = document.createElement('style');
+riseStyle.textContent = `@keyframes riseUp { to { transform: translateY(-100vh) rotate(${Math.random()*360}deg); opacity: 0; } }`;
+document.head.appendChild(riseStyle);
+
+document.addEventListener('keydown', e => {
+  const key = e.key.toUpperCase();
+  if (key === 'BACKSPACE') handleKey('⌫');
+  else if (key === 'ENTER') handleKey('ENTER');
+  else if (/^[A-Z]$/.test(key)) handleKey(key);
+});
+
+// Keyboard shortcut: space to toggle play
+document.addEventListener('keydown', e => {
+  if (e.code === 'Space' && e.target === document.body) {
+    e.preventDefault();
+    togglePlay();
+  }
+});
+
+// ===================== COUNTER =====================
+function updateCounter() {
+  const start = new Date(2025, 10, 22); // Nov 22, 2025
+  const now = new Date();
+
+  let years = now.getFullYear() - start.getFullYear();
+  let months = now.getMonth() - start.getMonth();
+  let days = now.getDate() - start.getDate();
+  let hours = now.getHours() - start.getHours();
+  let minutes = now.getMinutes() - start.getMinutes();
+  let seconds = now.getSeconds() - start.getSeconds();
+
+  if (seconds < 0) { seconds += 60; minutes--; }
+  if (minutes < 0) { minutes += 60; hours--; }
+  if (hours < 0) { hours += 24; days--; }
+  if (days < 0) {
+    const prev = new Date(now.getFullYear(), now.getMonth(), 0).getDate();
+    days += prev;
+    months--;
+  }
+  if (months < 0) { months += 12; years--; }
+
+  document.getElementById('counter-years').textContent = String(years).padStart(2, '0');
+  document.getElementById('counter-months').textContent = String(months).padStart(2, '0');
+  document.getElementById('counter-days').textContent = String(days).padStart(2, '0');
+  document.getElementById('counter-hours').textContent = String(hours).padStart(2, '0');
+  document.getElementById('counter-minutes').textContent = String(minutes).padStart(2, '0');
+  document.getElementById('counter-seconds').textContent = String(seconds).padStart(2, '0');
+}
+
+updateCounter();
+setInterval(updateCounter, 1000);
+
+// ===================== INIT =====================
+renderSongs();
+renderMoments();
+initGame();
+
+// Show first song info without playing
+playSong(0);
+isPlaying = false;
+stopSimulated();
+updatePlayIcons();
+document.getElementById('player-thumb').classList.remove('playing');
+progressVal = 0;
+updateProgress();
+document.getElementById('prog-current').textContent = '0:00';
+</script>
+</body>
+</html>
